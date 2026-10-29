@@ -151,12 +151,15 @@ def view_file():
     filename = request.args.get('file')
     base_path = os.path.abspath('./files')
     requested_path = os.path.normpath(os.path.join(base_path, filename))
-    try:
-        with open(requested_path, 'r') as file:
-            content = file.read()
-        return render_template('filecontent.html', filename=filename, content=content)
-    except Exception as e:
-        abort(500, description=str(e))
+    if not requested_path.startswith(base_path):
+        raise Exception("not allowed")
+    else :
+        try:
+            with open(requested_path, 'r') as file:
+                content = file.read()
+            return render_template('filecontent.html', filename=filename, content=content)
+        except Exception as e:
+            abort(500, description=str(e))
 
 if __name__ == '__main__':
     #Récupère le path de l'application
