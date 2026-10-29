@@ -150,7 +150,7 @@ def files():
 def view_file():
     filename = request.args.get('file')
     base_path = os.path.abspath('./files')
-    requested_path = os.path.abspath(os.path.join(base_path, filename))
+    requested_path = os.path.normpath(os.path.join(base_path, filename))
     try:
         with open(requested_path, 'r') as file:
             content = file.read()
