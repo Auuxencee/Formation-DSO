@@ -134,13 +134,6 @@ def gen_reqtxt(directory):
         for item in final_lib:
             f.write(item)
 
-if __name__ == '__main__':
-    #Récupère le path de l'application
-    app.run(host="0.0.0.0", port=5000)
-    directory = f'{Path(__file__).parent}'
-    print(directory)
-    gen_reqtxt(directory)
-    app.run(debug=True)
 
 @app.route('/files')
 def files():
@@ -155,14 +148,21 @@ def files():
 
 @app.route('/view')
 def view_file():
-    filename = request.args.get('file')  # Paramètre `file` passé dans l'URL
-    base_path = os.path.abspath('./files')  # Répertoire sécurisé
+    filename = request.args.get('file')
+    base_path = os.path.abspath('./files')
     requested_path = os.path.abspath(os.path.join(base_path, filename))
-
-
     try:
         with open(requested_path, 'r') as file:
-            content = file.read()  # Lire le contenu du fichier
+            content = file.read()
         return render_template('filecontent.html', filename=filename, content=content)
     except Exception as e:
         abort(500, description=str(e))
+
+if __name__ == '__main__':
+    #Récupère le path de l'application
+    app.run(host="0.0.0.0", port=5000)
+    directory = f'{Path(__file__).parent}'
+    print(directory)
+    gen_reqtxt(directory)
+    app.run(debug=True)
+
